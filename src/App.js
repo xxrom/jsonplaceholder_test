@@ -1,54 +1,140 @@
 import React, { Component } from 'react';
-import './App.css';
+
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Paper from '@material-ui/core/Paper';
+import Avatar from '@material-ui/core/Avatar';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Button from '@material-ui/core/Button';
 
 class App extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: 'Default name',
+      data: [],
     };
 
-    this.onChange = this.onChange.bind(this);
     this.onClick = this.onClick.bind(this);
   }
+
+  componentWillMount() {
+    fetch('http://my-json-server.typicode.com/xxrom/jsonplaceholder_test/users')
+      .then((response) => response.json())
+      .then((json) => {
+        console.log(json);
+        this.setState({
+          data: json,
+        });
+      });
+  }
+
   render() {
+    let table;
+    if (this.state.data.length === 0) {
+      table = <LinearProgress />;
+    } else {
+      const dataKeys = Object.keys(this.state.data[0]);
+      table = (
+        <Table>
+          <TableHead>
+            <TableRow>
+              {dataKeys.map((item) => <TableCell numeric>{item}</TableCell>)}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {this.state.data.map((item) => {
+              const innerCell = dataKeys.map((key) => {
+                if (key === 'avatar_url') {
+                  return (
+                    <TableCell style={styles.avatar} numeric>
+                      <Avatar alt="Adelle Charles" src={item[key]} />
+                    </TableCell>
+                  );
+                }
+                return <TableCell numeric>{item[key]}</TableCell>;
+              });
+              return <TableRow key={item.id}>{innerCell}</TableRow>;
+            })}
+          </TableBody>
+        </Table>
+      );
+    }
+
     return (
-      <div className="App">
-        <input value={this.state.name} onChange={this.onChange} />
-        <button onClick={this.onClick}>get</button>
+      <div style={styles.wrapper}>
+        <div className="App">
+          <Button
+            variant="outlined"
+            onClick={this.onClick}
+            style={styles.button}
+          >
+            Update
+          </Button>
+          <Paper style={styles.paper}>{table}</Paper>
+        </div>
       </div>
     );
   }
 
-  onChange({ target: { value } }) {
-    console.log(value);
+  // onChange({ target: { value } }) {
+  //   console.log(value);
 
-    this.setState({
-      name: value,
-    });
-  }
+  //   this.setState({
+  //     name: value,
+  //   });
+  // }
 
   onClick() {
     console.log('click');
-    fetch('https://jsonplaceholder.typicode.com/users/1')
+    this.setState({
+      data: [],
+    });
+    fetch('http://my-json-server.typicode.com/xxrom/jsonplaceholder_test/users')
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
-        console.log(this.state.name);
-        fetch('https://jsonplaceholder.typicode.com/users/1', {
-          method: 'PATCH',
-          body: JSON.stringify({
-            name: this.state.name,
-          }),
-          headers: {
-            'Content-type': 'application/json; charset=UTF-8',
-          },
-        })
-          .then((response) => response.json())
-          .then((json) => console.log(json));
+        this.setState({
+          data: json,
+        });
+        // console.log(this.state.name);
+        // fetch(
+        //   'http://my-json-server.typicode.com/xxrom/jsonplaceholder_test/users/1',
+        //   {
+        //     method: 'PATCH',
+        //     body: JSON.stringify({
+        //       name: this.state.name,
+        //     }),
+        //     headers: {
+        //       'Content-type': 'application/json; charset=UTF-8',
+        //     },
+        //   }
+        // )
+        //   .then((response) => response.json())
+        //   .then((json) => console.log(json));
       });
   }
 }
+
+const styles = {
+  wrapper: {
+    padding: '1em',
+    backgroundColor: 'rgb(240,240,240)',
+  },
+  paper: {
+    padding: '1em',
+  },
+  avatar: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  button: {
+    marginBottom: '1em',
+  },
+};
 
 export default App;

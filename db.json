@@ -2,7 +2,7 @@
   "users": [
     {
       "id": 1,
-      "name": "name1",
+      "name": "name 1",
       "avatar_url": "http://api.adorable.io/avatars/1",
       "address": "address 1"
     },
