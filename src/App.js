@@ -53,6 +53,7 @@ class App extends Component {
                 if (key === 'avatar_url') {
                   return (
                     <TableCell style={styles.avatar} numeric>
+                      {item[key]}
                       <Avatar alt="Adelle Charles" src={item[key]} />
                     </TableCell>
                   );
@@ -134,7 +135,8 @@ const styles = {
   avatar: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   button: {
     marginBottom: '1em',
