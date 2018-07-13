@@ -22,7 +22,9 @@ class App extends Component {
   }
 
   componentWillMount() {
-    fetch('http://my-json-server.typicode.com/xxrom/jsonplaceholder_test/users')
+    fetch(
+      'https://my-json-server.typicode.com/xxrom/jsonplaceholder_test/users'
+    )
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
@@ -93,7 +95,9 @@ class App extends Component {
     this.setState({
       data: [],
     });
-    fetch('http://my-json-server.typicode.com/xxrom/jsonplaceholder_test/users')
+    fetch(
+      'https://my-json-server.typicode.com/xxrom/jsonplaceholder_test/users'
+    )
       .then((response) => response.json())
       .then((json) => {
         console.log(json);
