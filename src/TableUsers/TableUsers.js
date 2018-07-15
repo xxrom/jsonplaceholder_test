@@ -14,14 +14,15 @@ import Checkbox from '@material-ui/core/Checkbox';
 class TableUsers extends Component {
   constructor(props) {
     super(props);
-    console.log('TableUsers');
+    console.log('TableUsers', props);
 
     this.state = {
       data: [],
       selectedRow: {},
     };
 
-    this.onClick = this.onClick.bind(this);
+    this.onClickUpdate = this.onClickUpdate.bind(this);
+    this.onClickChangeUser = this.onClickChangeUser.bind(this);
   }
 
   componentWillMount() {
@@ -76,7 +77,7 @@ class TableUsers extends Component {
               );
               return (
                 <TableRow
-                  key={item.id}
+                  key={`tr-${item.id}`}
                   style={
                     this.state.selectedRow[index] ? styles.selectedRow : null
                   }
@@ -103,7 +104,7 @@ class TableUsers extends Component {
         <div className="App">
           <Button
             variant="outlined"
-            onClick={this.onClick}
+            onClick={this.onClickUpdate}
             style={styles.button}
           >
             Update Table
@@ -111,7 +112,7 @@ class TableUsers extends Component {
 
           <Button
             variant="outlined"
-            onClick={this.onClick}
+            onClick={this.onClickChangeUser}
             style={styles.button}
           >
             Change User
@@ -122,7 +123,7 @@ class TableUsers extends Component {
     );
   }
 
-  onClick() {
+  onClickUpdate() {
     this.setState({
       data: [],
     });
@@ -136,6 +137,17 @@ class TableUsers extends Component {
           data: json,
         });
       });
+  }
+
+  onClickChangeUser() {
+    console.log('update User data');
+    // вытаскиваем индекс выделенной строки
+    const selectedRowIndex = Object.keys(this.state.selectedRow)[0];
+    console.log(selectedRowIndex);
+    // если текущая строка выделена, то переходим в редактирование
+    if (this.state.selectedRow[selectedRowIndex]) {
+      this.props.history.push(`/users/${selectedRowIndex}`);
+    }
   }
 }
 
