@@ -26,18 +26,15 @@ class TableUsers extends Component {
   }
 
   componentWillMount() {
-    fetch(
-      'https://my-json-server.typicode.com/xxrom/jsonplaceholder_test/users'
-    )
-      .then((response) => response.json())
-      .then((json) => {
-        this.setState({
-          data: json,
-        });
-      });
+    this.fetchUserTable();
   }
 
   render() {
+    const disabledChangeUser = !this.state.selectedRow[
+      Object.keys(this.state.selectedRow)[0]
+    ];
+    console.log('disabledChangedUser', disabledChangeUser);
+
     let table;
     if (this.state.data.length === 0) {
       table = <LinearProgress />;
@@ -106,6 +103,7 @@ class TableUsers extends Component {
             variant="outlined"
             onClick={this.onClickUpdate}
             style={styles.button}
+            color="primary"
           >
             Update Table
           </Button>
@@ -114,6 +112,7 @@ class TableUsers extends Component {
             variant="outlined"
             onClick={this.onClickChangeUser}
             style={styles.button}
+            disabled={disabledChangeUser}
           >
             Change User
           </Button>
@@ -123,20 +122,24 @@ class TableUsers extends Component {
     );
   }
 
-  onClickUpdate() {
-    this.setState({
-      data: [],
-    });
+  fetchUserTable() {
     fetch(
       'https://my-json-server.typicode.com/xxrom/jsonplaceholder_test/users'
     )
       .then((response) => response.json())
       .then((json) => {
-        console.log(json);
         this.setState({
           data: json,
         });
-      });
+      })
+      .catch((err) => console.log('Error', err));
+  }
+
+  onClickUpdate() {
+    this.setState({
+      data: [],
+    });
+    this.fetchUserTable();
   }
 
   onClickChangeUser() {
@@ -165,6 +168,7 @@ const styles = {
     alignItems: 'center',
   },
   button: {
+    marginRight: '1em',
     marginBottom: '1em',
   },
   selectedRow: {
