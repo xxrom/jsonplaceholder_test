@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import Divider from '@material-ui/core/Divider';
+import LinearProgress from '@material-ui/core/LinearProgress';
+import Avatar from '@material-ui/core/Avatar';
 
 class User extends Component {
   constructor(props) {
@@ -13,6 +17,8 @@ class User extends Component {
     this.onClickToTable = this.onClickToTable.bind(this);
     this.onClickUpdateUser = this.onClickUpdateUser.bind(this);
     this.onClickSetNewUser = this.onClickSetNewUser.bind(this);
+    this.showUserDataTemplate = this.showUserDataTemplate.bind(this);
+    this.changeUserNameTemplate = this.changeUserNameTemplate.bind(this);
   }
 
   componentWillMount() {
@@ -21,13 +27,9 @@ class User extends Component {
 
   render() {
     console.log('User', this.props);
-    const { id } = this.props.match.params;
-
-    const { user, newUser } = this.state;
-    const isDisabledSetNewUserData = this.compareObjects(user, newUser);
 
     return (
-      <div>
+      <div style={styles.wrapper}>
         <Button
           variant="outlined"
           onClick={this.onClickUpdateUser}
@@ -44,9 +46,55 @@ class User extends Component {
         >
           Back To Table
         </Button>
-        <h1>User!!!</h1>
-        <h1>ID: {id}</h1>
-        <h1>Name: {this.state.user.name}</h1>
+        <Paper style={styles.paper}>
+          {this.showUserDataTemplate()}
+          {this.changeUserNameTemplate()}
+        </Paper>
+      </div>
+    );
+  }
+
+  showUserDataTemplate() {
+    const { name, avatar_url, address, id } = this.state.user;
+
+    let userData;
+    console.log(typeof id);
+    console.log(typeof name);
+    if (
+      typeof id === 'undefined' ||
+      typeof name === 'undefined' ||
+      typeof avatar_url === 'undefined' ||
+      typeof address === 'undefined'
+    ) {
+      userData = <LinearProgress />;
+    } else {
+      userData = (
+        <div style={styles.userDataWrapper}>
+          <p>ID: {id}</p>
+          <p>Name: {name}</p>
+          <p>Avatar_url: {avatar_url}</p>
+          <p>Address: {address}</p>
+          <Avatar alt="avatar" src={avatar_url} style={styles.avatar} />
+        </div>
+      );
+    }
+
+    return (
+      <Paper style={styles.showUserData}>
+        <h2>User data:</h2>
+        <Divider />
+        {userData}
+      </Paper>
+    );
+  }
+
+  changeUserNameTemplate() {
+    const { user, newUser } = this.state;
+    const isDisabledSetNewUserData = this.compareObjects(user, newUser);
+    return (
+      <Paper style={styles.changeUser}>
+        <h2>Set new User data:</h2>
+        <Divider light />
         <TextField
           id="name"
           label="Name"
@@ -63,7 +111,7 @@ class User extends Component {
         >
           Set New User Data
         </Button>
-      </div>
+      </Paper>
     );
   }
 
@@ -107,6 +155,9 @@ class User extends Component {
   onClickSetNewUser() {
     const { newUser } = this.state;
     const { id } = this.props.match.params;
+    this.setState({
+      user: {},
+    });
     this.fetchSetUser(newUser, id);
   }
 
@@ -149,8 +200,37 @@ class User extends Component {
 }
 
 const styles = {
+  wrapper: {
+    padding: '1em',
+    backgroundColor: 'rgb(240,240,240)',
+    height: '100vh',
+    boxSizing: 'border-box',
+  },
+  paper: {
+    padding: '1em',
+  },
+  userDataWrapper: {
+    position: 'relative',
+  },
+  showUserData: {
+    padding: '1em',
+    marginBottom: '1em',
+  },
+  changeUser: {
+    backgroundColor: 'rgb(245,245,245)',
+    padding: '1em',
+  },
   button: {
     margin: '1em',
+  },
+  avatar: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+
+    border: '2px solid gray',
+    padding: '0.5em',
+    borderRadius: 0,
   },
 };
 

@@ -61,7 +61,7 @@ class TableUsers extends Component {
                   return (
                     <TableCell style={styles.cellAvatar}>
                       {`${item[key]}`}
-                      <Avatar alt="Adelle Charles" src={item[key]} />
+                      <Avatar alt="avatar" src={item[key]} />
                     </TableCell>
                   );
                 }
@@ -123,9 +123,24 @@ class TableUsers extends Component {
   }
 
   fetchUserTable() {
-    fetch(
-      'https://my-json-server.typicode.com/xxrom/jsonplaceholder_test/users'
-    )
+    let searchUrl =
+      'https://my-json-server.typicode.com/xxrom/jsonplaceholder_test/users'; // _start=1&_limit=3
+    let start;
+    let limit;
+    const searchArr = this.props.location.search.split('&');
+    // проверяем наличие параметров для выборки
+    searchArr.forEach((item) => {
+      if (item.indexOf('offset') !== -1) {
+        start = item.replace(/[^0-9]/g, '');
+      }
+      if (item.indexOf('limit') !== -1) {
+        limit = item.replace(/[^0-9]/g, '');
+      }
+    });
+    if (start && limit) {
+      searchUrl += `?_start=${start}&_limit=${limit}`;
+    }
+    fetch(searchUrl)
       .then((response) => response.json())
       .then((json) => {
         this.setState({
@@ -158,6 +173,7 @@ const styles = {
   wrapper: {
     padding: '1em',
     backgroundColor: 'rgb(240,240,240)',
+    boxSizing: 'border-box',
   },
   paper: {
     padding: '1em',

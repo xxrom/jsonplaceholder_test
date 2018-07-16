@@ -7,8 +7,16 @@ class App extends Component {
   render() {
     return (
       <Switch>
-        <Route path="/" exact render={(props) => <TableUsers {...props} />} />
-        <Route path="/users/:id" render={(props) => <User {...props} />} />
+        <Route
+          path="/(|users)"
+          exact
+          render={(props) => <TableUsers {...props} />}
+        />
+        <Route
+          path="/users/:id"
+          exact
+          render={(props) => <User {...props} />}
+        />
       </Switch>
     );
   }
