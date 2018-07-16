@@ -113,6 +113,7 @@ class TableUsers extends Component {
             onClick={this.onClickChangeUser}
             style={styles.button}
             disabled={disabledChangeUser}
+            color="secondary"
           >
             Change User
           </Button>
